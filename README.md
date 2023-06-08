@@ -1,5 +1,5 @@
 # ChatGPT_WebSever
-基于ChatGPT(gpt-3.5-turbo)写的一个简单WeServer
+基于ChatGPT(gpt-3.5-turbo)写的一个简单WeServer，大致是问它如何设计类合理，手残没有保存原始对话。
 
 # 头文件说明
 server.h：定义了 Server 类，实现了服务器的启动、关闭和添加处理程序等功能。
