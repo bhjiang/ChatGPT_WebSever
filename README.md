@@ -1,0 +1,2 @@
+# ChatGPT_WebSever
+基于ChatGPT写的一个简单WeServer
