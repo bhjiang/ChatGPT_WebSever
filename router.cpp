@@ -26,7 +26,7 @@ void Router::route(int connfd) {
     size_t pos = request.find(" ");
     if (pos == std::string::npos) {
         std::cerr << "Error: Invalid request" << std::endl;
-        perror("Invalid request");
+        //perror("Invalid request");
         return;
     }
     std::string method = request.substr(0, pos);
