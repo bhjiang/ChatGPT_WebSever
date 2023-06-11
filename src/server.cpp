@@ -41,10 +41,6 @@ void Server::start() {
 	   	return;
     }
 
-    // Set socket to non-blocking mode
-    //int flags = fcntl(m_sockfd, F_GETFL, 0);
-    //fcntl(m_sockfd, F_SETFL, flags | O_NONBLOCK);
-
     // Start accepting connections in a separate thread
     m_running = true;
     ThreadPool pool(10); // 创建线程池，大小为10
@@ -57,41 +53,11 @@ void Server::start() {
         });
     }
 	} 
-    /*
-    while (m_running) {
-	    int connfd = accept(m_sockfd, NULL, NULL);
-	    if (connfd >= 0) {
-		    m_router.route(connfd);
-		    close(connfd);
-		}
-    } 
-    */
-    
-    /*m_threads.emplace_back([&]() {
-        while (m_running) {
-            int connfd = accept(m_sockfd, NULL, NULL);
-            if (connfd >= 0) {
-		    m_router.route(connfd);
-		    close(connfd);
-            } 
-            if (connfd >= 0) {
-                // Handle connection in a new thread
-                m_threads.emplace_back([&](int connfd) {
-                    m_router.route(connfd);
-                    close(connfd);
-                }, connfd);
-            } else {
-                //usleep(10);
-            }
-        }
-    });*/
+
 }
 
 void Server::stop() {
     m_running = false;
-    /*for (auto& t : m_threads) {
-        t.join();
-    }*/
     close(m_sockfd);
 }
 

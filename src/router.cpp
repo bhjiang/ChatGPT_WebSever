@@ -24,16 +24,17 @@ void Router::route(int connfd) {
     std::string request(buf, n);
     //std::cout<<request;
     size_t pos = request.find(" ");
-    if (pos == std::string::npos) {
+    if (pos == std::string::npos && !request.empty()) {
         std::cerr << "Error: Invalid request" << std::endl;
-        //perror("Invalid request");
+        std::cout << request << std::endl;
         return;
     }
     std::string method = request.substr(0, pos);
     request.erase(0, pos + 1);
     pos = request.find(" ");
-    if (pos == std::string::npos) {
+    if (pos == std::string::npos && !request.empty()) {
         std::cerr << "Error: Invalid request" << std::endl;
+        std::cout << request << std::endl;
         return;
     }
     std::string path = request.substr(0, pos);
