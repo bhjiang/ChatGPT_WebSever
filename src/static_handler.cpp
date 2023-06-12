@@ -13,14 +13,14 @@ StaticHandler::StaticHandler(std::string root_dir) :
 void StaticHandler::handle(Request& req, Response& res) {
     // Get file path
     std::string path = m_root_dir + req.get_path();
-	//std::cout<<path<<std::endl;
+    std::cout<<path<<std::endl;
 	
     // Check if file exists
-    struct stat st;
+    /*struct stat st;
     if (stat(path.c_str(), &st) != 0 || !(st.st_mode & S_IFREG)) {
         res.set_status_code(404);
         return;
-    }
+    }*/
 
     // Read file contents
     std::ifstream file(path);
