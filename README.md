@@ -1,7 +1,7 @@
 # ChatGPT_WebSever
-基于ChatGPT(gpt-3.5-turbo)写的一个简单WeServer，大致是问它如何设计类合理，手残没有保存原始对话。
+基于ChatGPT(gpt-3.5-turbo)写的一个简单WeServer。
 
-使用了线程池实现并发处理客户端连接请求。后面有时间会逐渐完善这个项目。
+使用了线程池实现并发处理客户端连接请求。
 
 # 头文件说明
 server.h：定义了 Server 类，实现了服务器的启动、关闭和添加处理程序等功能。
@@ -16,5 +16,5 @@ response.h：定义了 Response 类，表示服务器返回的响应，包括状
 
 static_handler.h：定义了 StaticHandler 类，继承自 Handler 类，用于处理静态资源请求，即返回服务器上的文件。
 
-# 调用逻辑
+
 
