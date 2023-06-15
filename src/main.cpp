@@ -3,6 +3,8 @@
 #include "handler.h"
 #include <fstream>
 #include <sstream>
+#include "form_handler.h"
+#include <stdlib.h>
 
 class DefaultHandler: public Handler {
 public:
@@ -34,7 +36,7 @@ void DefaultHandler::handle(Request& req, Response& res){
 }
 
 int main() {
-	Server server(80);
+	Server server(8080);
 	StaticHandler* statichandler=new StaticHandler("/home/bhjiang/bhjiang.github.io");
 	
 	server.add_handler("/", new DefaultHandler("/home/bhjiang/bhjiang.github.io/index.html"));
@@ -50,6 +52,10 @@ int main() {
 	server.add_handler("/images/flower.jpg", statichandler);
 	server.add_handler("/images/JsonZhang.jpg", statichandler);
 	server.add_handler("/images/changlong.jpg", statichandler);
+	server.add_handler("/submit.php", statichandler);
+	
+	FormHandler* formhandler=new FormHandler;
+	server.add_handler("/submit.php", formhandler);
 	
 	server.start();
 	server.stop();
