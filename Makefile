@@ -4,7 +4,7 @@ CXXFLAGS = -std=c++11 -pthread -Wall
 
 # 源代码和头文件目录
 SRCDIR = src
-LIBDIR = lib
+LIBDIR = include
 
 # 目标文件和可执行文件目录
 BINDIR = bin
