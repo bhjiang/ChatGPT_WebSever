@@ -10,7 +10,8 @@ LIBDIR = include
 BINDIR = bin
 
 # MySQL Connector/C++库的路径
-MYSQLCPPCONN_LIB = /usr/lib/x86_64-linux-gnu/libmysqlcppconn.so
+#MYSQLCPPCONN_LIB = /usr/lib/x86_64-linux-gnu/libmysqlcppconn.so
+MYSQLCPPCONN_LIB = 
 
 # 目标文件的生成规则
 # 将每个.cpp文件编译为一个.o文件
