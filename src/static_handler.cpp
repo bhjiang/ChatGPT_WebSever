@@ -6,21 +6,25 @@
 #include <sys/stat.h>
 #include "static_handler.h"
 
-StaticHandler::StaticHandler(std::string root_dir) :
-    m_root_dir(root_dir)
+StaticHandler::StaticHandler(std::string _root_dir) :
+    root_dir(_root_dir)
 {}
 
 void StaticHandler::handle(Request& req, Response& res) {
     // Get file path
-    std::string path = m_root_dir + req.get_path();
-    std::cout<<path<<std::endl;
+    std::string url=req.get_path();
+    if(url=="/"){
+        url="/index.html";
+    }
+    std::string path = root_dir + url;
+    // std::cout<<path<<std::endl;
 	
     // Check if file exists
-    /*struct stat st;
+    struct stat st;
     if (stat(path.c_str(), &st) != 0 || !(st.st_mode & S_IFREG)) {
         res.set_status_code(404);
         return;
-    }*/
+    }
 
     // Read file contents
     std::ifstream file(path);

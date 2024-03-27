@@ -6,9 +6,10 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include "router.h"
+#include "static_handler.h"
 
-void Router::add_handler(std::string path, Handler* handler) {
-    m_routes.push_back({path, handler});
+void Router::add_handler(std::string cgi, Handler* handler) {
+    routes.push_back({cgi, handler});
 }
 
 void Router::route(int connfd) {
@@ -20,49 +21,33 @@ void Router::route(int connfd) {
         return;
     }
 
-    // Parse request
     std::string request(buf, n);
-    //std::cout<<request;
-    size_t pos = request.find(" ");
-    if (pos == std::string::npos && !request.empty()) {
-        std::cerr << "Error: Invalid request" << std::endl;
-        std::cout << request << std::endl;
-        return;
-    }
-    std::string method = request.substr(0, pos);
-    request.erase(0, pos + 1);
-    pos = request.find(" ");
-    if (pos == std::string::npos && !request.empty()) {
-        std::cerr << "Error: Invalid request" << std::endl;
-        std::cout << request << std::endl;
-        return;
-    }
-    std::string path = request.substr(0, pos);
-    request.erase(0, pos + 1);
+    Request req(request);
 	
     // Find handler for path
+    std::string path=req.get_path();
+    std::cout<<path<<std::endl;
     Handler* handler = nullptr;
-    for (auto& route : m_routes) {
-        if (route.path == path) {
-            handler = route.handler;
+    for (int i=1;i<routes.size();i++) {
+        if (path.find(routes[i].cgi) != std::string::npos) {
+            handler = routes[i].handler;
             break;
         }
     }
 
     // Handle request
+    Response res;
     if (handler) {
-        Request req(method, path, request);
-        Response res;
+        // std::cout<<"No StaticHandler"<<std::endl;
         handler->handle(req, res);
-        std::string response = res.to_string();
-        if (write(connfd, response.c_str(), response.size()) < 0) {
-            std::cerr << "Error: Failed to write response" << std::endl;
-        }
-    } else {
-        std::string response = "HTTP/1.1 404 Not Found\r\n\r\n";
-        if (write(connfd, response.c_str(), response.size()) < 0) {
-            std::cerr << "Error: Failed to write response" << std::endl;
-        }
+    } else {// 默认使用StaticHandler
+        // std::cout<<"StaticHandler"<<std::endl;
+        handler=routes[0].handler;
+        handler->handle(req, res);
+    }
+    std::string response = res.to_response();
+    if (write(connfd, response.c_str(), response.size()) < 0) {
+        std::cerr << "Error: Failed to write response" << std::endl;
     }
 }
 
