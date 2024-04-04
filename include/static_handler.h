@@ -6,11 +6,7 @@
 
 class StaticHandler : public Handler {
 public:
-    StaticHandler(std::string _root_dir);
     void handle(Request& req, Response& res) override;
-private:
-    std::string root_dir;
-    std::string get_content_type(std::string path);
 };
 
 #endif // STATIC_HANDLER_H

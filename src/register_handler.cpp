@@ -6,6 +6,7 @@
 #include <sstream>
 #include <unordered_map>
 #include <fstream>
+#include "static_handler.h"
 
 RegisterHandler::RegisterHandler(std::string _host, std::string _user, std::string _password, std::string _database)
 {
@@ -22,45 +23,41 @@ void RegisterHandler::handle(Request& req, Response& res)
 
     if (con == NULL)
     {
-        res.set_status_code(500);
+        // res.set_status_code(500);
         std::cout << "Mysql error" << std::endl;
-        exit(1);
+        return;
     }
 	if (!mysql_real_connect(con, host.c_str(), user.c_str(), password.c_str(), database.c_str(), 3306, NULL, 0)) {
+        // res.set_status_code(500);
 		std::cout << "Failed to connect to database." << std::endl;
-        exit(1);
+        return;
 	}
 
-    auto post_data=req.get_post_data();
-    std::cout<<post_data["user"]<<" "<<post_data["password"]<<std::endl;
+    std::string user,password;
 
-    std::string query = "INSERT ignore INTO user (username, passwd) VALUES ('";
-    query=query + post_data["user"] + "', '" + post_data["password"] + "');";
-    std::cout<<query<<std::endl;
+    if(req.get_param("user",user)&&req.get_param("password",password))
+    {
+        std::string query = "INSERT INTO user (username, passwd) VALUES ('";
+        query=query + user + "', '" + password + "');";
+        std::cout<<query<<std::endl;
 
-    std::string root_dir="/home/bhjiang/bhjiang.github.io/root";
-    if(!mysql_query(con, query.c_str()))
-    {
-        std::string path="/log.html";
-        std::ifstream file(root_dir + path);
-        if (!file.is_open()) {
-            res.set_status_code(500);
-            return;
+        std::string path;
+        if(!mysql_query(con, query.c_str()))
+        {
+            path ="/log.html";
         }
-        std::stringstream buffer;
-        buffer << file.rdbuf();
-        res.set_body(buffer.str());
-    }
-    else
-    {
-        std::string path="/registerError.html";
-        std::ifstream file(root_dir + path);
-        if (!file.is_open()) {
-            res.set_status_code(500);
-            return;
+        else
+        {
+            path ="/registerError.html";
         }
-        std::stringstream buffer;
-        buffer << file.rdbuf();
-        res.set_body(buffer.str());
+
+        read_static_file(path, res);
     }
+    // else
+    // {
+    //     res.set_status_code(500);
+    //     return;
+    // }
+
+
 }

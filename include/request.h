@@ -6,19 +6,23 @@
 
 class Request {
 public:
-    Request(std::string buf);
+    void set_method(std::string method_);
+    void set_path(std::string path_);
+    void set_version(std::string version_);
+    void set_header(std::string key_, std::string value_);
+    void set_param(std::string key_, std::string value_);
+
     std::string get_method();
     std::string get_path();
     std::string get_version();
-    std::string get_body();
-    std::string get_header(std::string key);
-    std::unordered_map<std::string, std::string> get_post_data();
+    bool get_header(std::string key_,std::string &value_);
+    bool get_param(std::string key_,std::string &value_);
 private:
     std::string method;
     std::string path;
     std::string version;
-    std::string body;
-    std::unordered_map<std::string, std::string> headers;
+    std::unordered_map<std::string, std::string> header;
+    std::unordered_map<std::string, std::string> param;
 };
 
 #endif // REQUEST_H

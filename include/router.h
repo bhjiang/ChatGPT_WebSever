@@ -10,11 +10,12 @@ public:
     void add_handler(std::string cgi, Handler* handler);
     void route(int connfd);
 private:
-    struct Route {
-        std::string cgi;
-        Handler* handler;
-    };
-    std::vector<Route> routes;
+    // struct Route {
+    //     std::string cgi;
+    //     Handler* handler;
+    // };
+    // std::vector<Route> routes;
+    std::unordered_map<std::string, Handler*> routes;
 };
 
 #endif // ROUTER_H

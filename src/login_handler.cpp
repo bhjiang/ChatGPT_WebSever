@@ -6,12 +6,12 @@
 #include <sstream>
 #include <unordered_map>
 
-LoginHandler::LoginHandler(std::string host, std::string user, std::string password, std::string database)
+LoginHandler::LoginHandler(std::string host_, std::string user_, std::string password_, std::string database_)
 {
-	m_host=host;
-	m_user=user;
-	m_password=password;
-    m_database=database;
+	host=host_;
+	user=user_;
+	password=password_;
+    database=database_;
 }
 
 void LoginHandler::handle(Request& req, Response& res)
@@ -21,17 +21,41 @@ void LoginHandler::handle(Request& req, Response& res)
 
     if (con == NULL)
     {
-        res.set_status_code(500);
+        // res.set_status_code(500);
         std::cout << "Mysql error" << std::endl;
-        exit(1);
+        return;
     }
-	if (!mysql_real_connect(con, m_host.c_str(), m_user.c_str(), m_password.c_str(), m_database.c_str(), 3306, NULL, 0)) {
+	if (!mysql_real_connect(con, host.c_str(), user.c_str(), password.c_str(), database.c_str(), 3306, NULL, 0)) {
 		std::cout << "Failed to connect to database." << std::endl;
-        exit(1);
+        return;
 	}
 
-    auto post_data=req.get_post_data();
-    std::string query = "INSERT INTO messages ((username, passwd) VALUES ('" + post_data["username"] + post_data["passwd"] + "')";
-    mysql_query(con, query.c_str());
-    // std::cout << "Data inserted successfully." << std::endl;
+    std::string user,password;
+
+    if(req.get_param("user",user)&&req.get_param("password",password))
+    {
+        std::string query = "SELECT * FROM user WHERE username='"+user+"' AND passwd='"+password+"';";
+        std::cout<<query<<std::endl;
+
+        std::string path;
+        if(!mysql_query(con, query.c_str()))
+        {
+            auto re=mysql_use_result(con);
+            auto row = mysql_fetch_row(re);
+            if(row)
+            {
+                path ="/index.html";
+            }
+            else
+            {
+                path ="/logError.html";
+            }
+        }
+        else
+        {
+            path ="/logError.html";
+        }
+
+        read_static_file(path, res);
+    }
 }
