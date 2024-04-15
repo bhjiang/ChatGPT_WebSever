@@ -100,10 +100,10 @@ void Router::route(int connfd) {
     // Handle request
     Response res;
     if (!routes.count(path.substr(1))) {
-        std::cout<<"No StaticHandler"<<std::endl;
+        // std::cout<<"No StaticHandler"<<std::endl;
         routes["static"]->handle(req, res);//多态
     } else {// 默认使用StaticHandler
-        std::cout<<"StaticHandler"<<std::endl;
+        // std::cout<<"StaticHandler"<<std::endl;
         routes[path.substr(1)]->handle(req, res);//多态
     }
 
