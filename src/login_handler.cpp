@@ -34,7 +34,7 @@ void LoginHandler::handle(Request& req, Response& res)
 
     if(req.get_param("user",user)&&req.get_param("password",password))
     {
-        std::string query = "SELECT * FROM user WHERE username='"+user+"' AND passwd='"+password+"';";
+        std::string query = "select * from user_profile where user='"+user+"' and password='"+password+"';";
         std::cout<<query<<std::endl;
 
         std::string path;
@@ -44,11 +44,11 @@ void LoginHandler::handle(Request& req, Response& res)
             auto row = mysql_fetch_row(re);
             if(row)
             {
-                path ="/index.html";
+                path ="/main.html";
             }
             else
             {
-                path ="/logError.html";
+                path ="/loginError.html";
             }
         }
         else

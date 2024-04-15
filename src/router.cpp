@@ -20,20 +20,29 @@ void Router::route(int connfd) {
     // Read request
     char buf[4096];
     int n = read(connfd, buf, sizeof(buf));
+    if(n==0){
+        close(connfd);
+        std::cerr<<"request size is 0"<<std::endl;
+        return;
+    }
     if (n < 0) {
         std::cerr << "Error: Failed to read request" << std::endl;
         return;
     }
 
     std::string request(buf, n);
+    // std::cout<<request<<std::endl;
     Request req;
     std::stringstream ss(request);
-    std::string line;
+    // std::cout<<ss.str()<<std::endl;
 
     // 解析请求行
+    std::string line;
     std::getline(ss, line);
+    std::stringstream ssline(line);
     std::string method, path, version;
-    ss>>method>>path>>version;
+    ssline>>method>>path>>version;
+    // std::cout<<method<<" "<<path<<" "<<version<<std::endl;
     req.set_method(method);
     req.set_path(path);
     req.set_version(version);
@@ -49,13 +58,32 @@ void Router::route(int connfd) {
     }
 
     // 获取请求体
-    std::string body;
-    std::getline(ss, body);
-    auto pos = line.find("&");
-    if (pos != std::string::npos) {
-        std::string key = line.substr(0, pos);
-        std::string value = line.substr(pos + 1);
-        req.set_param(key,value);
+    if(method=="POST")
+    {
+        std::string body;
+        std::getline(ss, body);
+        // std::cout << body << std::endl;
+
+        std::string key, value;
+        std::stringstream bodyStream(body);
+        while (std::getline(bodyStream, line, '&')) {
+            std::stringstream keyValueStream(line);
+            std::getline(keyValueStream, key, '=');
+            std::getline(keyValueStream, value);
+            req.set_param(key, value);
+            // std::cout << key << ":" << value << std::endl;
+        }
+        // std::string body;
+        // std::getline(ss, body);
+        // std::cout<<body<<std::endl;
+        // auto pos = line.find("&");
+        // std::cout<<pos<<" "<<std::string::npos<<std::endl;
+        // if (pos != std::string::npos) {
+        //     std::string key = line.substr(0, pos);
+        //     std::string value = line.substr(pos + 1);
+        //     req.set_param(key,value);
+        //     std::cout<<key<<":"<<value<<std::endl;
+        // }
     }
 
     // Find handler for path
@@ -72,10 +100,10 @@ void Router::route(int connfd) {
     // Handle request
     Response res;
     if (!routes.count(path.substr(1))) {
-        // std::cout<<"No StaticHandler"<<std::endl;
+        std::cout<<"No StaticHandler"<<std::endl;
         routes["static"]->handle(req, res);//多态
     } else {// 默认使用StaticHandler
-        // std::cout<<"StaticHandler"<<std::endl;
+        std::cout<<"StaticHandler"<<std::endl;
         routes[path.substr(1)]->handle(req, res);//多态
     }
 

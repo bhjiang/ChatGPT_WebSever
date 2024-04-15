@@ -52,7 +52,12 @@ void Server::start() {
             close(connfd);
         });
     }
+    else {
+        std::cerr << "Error: Failed to accept connection" << std::endl;
+    }
+    
 	} 
+
 
 }
 

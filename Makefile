@@ -1,6 +1,6 @@
 # 编译器和编译选项
 CXX = g++
-CXXFLAGS = -lpthread -Wall -lmysqlclient
+CXXFLAGS = -lpthread -Wall -lmysqlclient -g
 
 # 源代码和头文件目录
 SRCDIR = src

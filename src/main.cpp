@@ -4,8 +4,9 @@
 #include "handler.h"
 #include "register_handler.h"
 
-int main() {
-	Server server(80);
+int main(int argc, char** argv) {
+	int port=argv[1]?atoi(argv[1]):80;
+	Server server(port);
 
 	// mysql数据库配置
 	std::string host="localhost";
@@ -14,10 +15,10 @@ int main() {
 	std::string datebase="bh";
 
 	// 静态文件根目录
-	std::string root="/home/bhjiang/bhjiang.github.io";
-	StaticHandler* staticHandler=new StaticHandler();
-	staticHandler->root_dir=root;
-	// Handler::root_dir=root;
+	std::string root="/home/bhjiang/ChatGPT_WebSever/bhjiang.github.io";
+	Handler::root_dir=root;
+	// StaticHandler* staticHandler=new StaticHandler();
+	// staticHandler->root_dir=root;
 	server.add_handler("static", new StaticHandler());
 
 	// 增加新的handler

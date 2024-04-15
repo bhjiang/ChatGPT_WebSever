@@ -6,6 +6,8 @@
 #include <sys/stat.h>
 #include "handler.h"
 
+std::string Handler::root_dir="";
+
 void Handler::read_static_file(std::string path, Response& res) {
     path = root_dir + path;
     
@@ -13,6 +15,8 @@ void Handler::read_static_file(std::string path, Response& res) {
     struct stat st;
     if (stat(path.c_str(), &st) != 0 || !(st.st_mode & S_IFREG)) {
         res.set_status_code(404);
+        std::cerr<<"file not found, the file path is "<< path <<std::endl;
+        perror("file not found");
         return;
     }
 
@@ -20,6 +24,7 @@ void Handler::read_static_file(std::string path, Response& res) {
     std::ifstream file(path);
     if (!file.is_open()) {
         res.set_status_code(500);
+        perror("file open failed");
         return;
     }
 

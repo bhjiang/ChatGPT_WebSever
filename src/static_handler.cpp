@@ -12,9 +12,10 @@ void StaticHandler::handle(Request& req, Response& res) {
     if(url=="/"){
         url="/index.html";
     }
-    std::string path = root_dir + url;
+    std::cout<<"url:"<<url<<std::endl;
+    // std::string path = root_dir + url;
     // std::cout<<path<<std::endl;
-    read_static_file(path, res);
+    read_static_file(url, res);
 }
 
 

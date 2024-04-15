@@ -37,27 +37,28 @@ void RegisterHandler::handle(Request& req, Response& res)
 
     if(req.get_param("user",user)&&req.get_param("password",password))
     {
-        std::string query = "INSERT INTO user (username, passwd) VALUES ('";
+        std::string query = "insert into user_profile (user, password) VALUES ('";
         query=query + user + "', '" + password + "');";
         std::cout<<query<<std::endl;
 
         std::string path;
         if(!mysql_query(con, query.c_str()))
         {
-            path ="/log.html";
+            path ="/login.html"; // 成功注册后跳转到登录页面
+            std::cout << "Register success" << std::endl;
         }
         else
         {
-            path ="/registerError.html";
+            path ="/registerError.html"; // 注册失败
         }
 
         read_static_file(path, res);
     }
-    // else
-    // {
-    //     res.set_status_code(500);
-    //     return;
-    // }
+    else
+    {
+        std::cout<<"No user or password"<<std::endl;
+        return;
+    }
 
 
 }
