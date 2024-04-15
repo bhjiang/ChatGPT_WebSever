@@ -15,7 +15,7 @@ int main(int argc, char** argv) {
 	std::string datebase="bh";
 
 	// 静态文件根目录
-	std::string root="/home/bhjiang/ChatGPT_WebSever/bhjiang.github.io";
+	std::string root="/home/bhjiang/bhjiang.github.io";
 	Handler::root_dir=root;
 	// StaticHandler* staticHandler=new StaticHandler();
 	// staticHandler->root_dir=root;
