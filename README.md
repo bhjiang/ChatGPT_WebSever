@@ -13,7 +13,8 @@
 - StaticHandler类，继承自Handler类，用于处理静态资源请求，即返回服务器上的文件。
 
 # TODO
-epoll
+- epoll
+- 用单例模式实现配置文件功能
 
 
 
